@@ -105,23 +105,23 @@ if [ $bootmode = "UEFI" ]; then
     fi
 fi
 # 6. Install
-pacstrap /mnt base nano > /dev/null &
-for i in {1..22} ;do echo $i;sleep 0.5;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Base System..." 10 45
+pacstrap -K /mnt base &> /dev/null &
+for i in {1..22} ;do echo $i;sleep 0.75;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Base System..." 10 45
 wait
 for i in {22..25} ;do echo $i;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Base System..." 10 45
 
-pacstrap /mnt linux-zen > /dev/null &
-for i in {25..46} ;do echo $i;sleep 0.5;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Linux Kernel.." 10 45
+pacstrap -K /mnt linux &> /dev/null &
+for i in {25..46} ;do echo $i;sleep 0.75;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Linux Kernel.." 10 45
 wait
 for i in {46..50} ;do echo $i;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Linux Kernel..." 10 45
 
-pacstrap /mnt linux-zen-headers > /dev/null &
-for i in {50..73} ;do echo $i;sleep 0.5;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Kernel Headers.." 10 45
+pacstrap -K /mnt linux-headers &> /dev/null &
+for i in {50..73} ;do echo $i;sleep 0.75;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Kernel Headers.." 10 45
 wait
 for i in {73..75} ;do echo $i;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Linux Kernel Headers..." 10 45
 
-pacstrap /mnt linux-firmware > /dev/null &
-for i in {75..97} ;do echo $i;sleep 0.5;done | dialog --title "Installing..." --backtitle "Ensure Linux Installer" --gauge "Installing Kernel Firmware.." 10 45
+pacstrap -K /mnt linux-firmware &> /dev/null &
+for i in {75..97} ;do echo $i;sleep 0.75;done | dialog --title "Installing..." --backtitle "Ensure Linux Installer" --gauge "Installing Kernel Firmware.." 10 45
 wait
 for i in {97..100} ;do echo $i;done | dialog --title "Installing System..." --backtitle "Ensure Linux Installer" --gauge "Installing Linux Kernel Firmware..." 10 45
 
@@ -148,51 +148,49 @@ fi
 echo '127.0.0.1 localhost' >> /mnt/etc/hosts
 # 6-5. Setting Up Users
 username=$(dialog --stdout --backtitle "Ensure Linux Installer" --inputbox "User Name:" 8 45 "user1")
-arch-chroot /mnt bash -c "useradd -m -G wheel $(username) && passwd $(username)"
+arch-chroot /mnt bash -c "useradd -m -G wheel $username && passwd $username"
 # 6-6. Setting Up Timezone
 dialog --title "Setting up timezone..." --infobox "Please wait..." 5 30
-arch-chroot /mnt bash -c 'timedatectl set-timezone Asia/Shanghai && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && hwclock --systohc && timedatectl set-ntp true'
-# 6-7. Installing Softwareor i in {73..75} ;do echo $i;done | dialog --title "Installing..." --backtitle "Ensure Linux Installer" --gauge "Installing Chinese font..." 10 45
+arch-chroot /mnt bash -c 'timedatectl set-timezone Asia/Shanghai && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && hwclock --systohc && timedatectl set-ntp true' > /dev/null
+# 6-7. Installing Software
 
-arch-chroot /mnt bash -c 'pacman -S grub' &
-for i in {50..73} ;do echo $i;sleep 0.5;done | dialog --title "Installing softwareSetting up timezone..." --backtitle "Ensure Linux Installer" --gauge "Installing GRUB..." 10 45
-arch-chroot /mnt bash -c 'pacman -S networkmanager' &
-for i in {1..22} ;do echo $i;sleep 0.5;done | dialog --title "Installing software..." --backtitle "Ensure Linux Installer" --gauge "Installing Network..." 10 45
+arch-chroot /mnt bash -c 'pacman --noconfirm --asdeps -S networkmanager' > /dev/null &
+for i in {1..22} ;do echo $i;sleep 0.75;done | dialog --title "Installing software..." --backtitle "Ensure Linux Installer" --gauge "Installing Network..." 10 45
 wait
 for i in {22..25} ;do echo $i;done | dialog --title "Installing software..." --backtitle "Ensure Linux Installer" --gauge "Installing Network..." 10 45
 
-arch-chroot /mnt bash -c 'pacman -S sudo' &
-for i in {25..47} ;do echo $i;sleep 0.5;done | dialog --title "Installing software..." --backtitle "Ensure Linux Installer" --gauge "Installing SUDO..." 10 45
+arch-chroot /mnt bash -c 'pacman --noconfirm --asdeps -S sudo' > /dev/null &
+for i in {25..47} ;do echo $i;sleep 0.75;done | dialog --title "Installing software..." --backtitle "Ensure Linux Installer" --gauge "Installing SUDO..." 10 45
 wait
 for i in {47..50} ;do echo $i;done | dialog --title "Installing..." --backtitle "Ensure Linux Installer" --gauge "Installing SUDO..." 10 45
 
-arch-chroot /mnt bash -c 'pacman -S wqy-zenhei wqy-microhei' &
-for i in {50..73} ;do echo $i;sleep 0.5;done | dialog --title "Installing software..." --backtitle "Ensure Linux Installer" --gauge "Installing Chinese font..." 10 45
+arch-chroot /mnt bash -c 'pacman --noconfirm --asdeps -S wqy-zenhei wqy-microhei nano' > /dev/null &
+for i in {50..73} ;do echo $i;sleep 0.75;done | dialog --title "Installing software..." --backtitle "Ensure Linux Installer" --gauge "Installing Chinese font..." 10 45
 wait
 for i in {73..75} ;do echo $i;done | dialog --title "Installing..." --backtitle "Ensure Linux Installer" --gauge "Installing Chinese font..." 10 45
 
-arch-chroot /mnt bash -c 'pacman -S grub' &
-for i in {50..73} ;do echo $i;sleep 0.5;done | dialog --title "Installing softwareSetting up timezone..." --backtitle "Ensure Linux Installer" --gauge "Installing GRUB..." 10 45
+arch-chroot /mnt bash -c 'pacman --noconfirm --asdeps -S grub' > /dev/null &
+for i in {75..97} ;do echo $i;sleep 0.75;done | dialog --title "Installing software..." --backtitle "Ensure Linux Installer" --gauge "Installing GRUB..." 10 45
 wait
-for i in {73..75} ;do echo $i;done | dialog --title "Installing..." --backtitle "Ensure Linux Installer" --gauge "Installing GRUB..." 10 45
+for i in {97..100} ;do echo $i;done | dialog --title "Installing..." --backtitle "Ensure Linux Installer" --gauge "Installing GRUB..." 10 45
 dialog --title "Installing GRUB Bootloader..." --infobox "Please wait..." 5 30
 if [ $bootmode = "UEFI" ]; then
-    arch-chroot /mnt bash -c "grub-install --target=x86_64_efi --efi-directory='/boot' --bootloader-id='Ensure Linux' && grub-mkconfig -o /boot/grub/grub.cfg"
+    arch-chroot /mnt bash -c "grub-install --target=x86_64_efi --efi-directory='/boot' --bootloader-id='Ensure Linux' && grub-mkconfig -o /boot/grub/grub.cfg" > /dev/null
 else
     grubdisk=$(dialog --stdout --backtitle "Ensure Linux Installer" --inputbox "Install GRUB to:" 8 45 "/dev/sda")
-    arch-chroot /mnt bash -c "grub-install $grubdisk && grub-mkconfig -o /boot/grub/grub.cfg"
+    arch-chroot /mnt bash -c "grub-install $grubdisk && grub-mkconfig -o /boot/grub/grub.cfg" > /dev/null
 fi
 #6-8. Installing GUI
-arch-chroot /mnt bash -c 'pacman -S xorg' &
-for i in {1..23} ;do echo $i;sleep 0.5;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing Xorg..." 10 45
+arch-chroot /mnt bash -c 'pacman -S --noconfirm --asdeps xorg' > /dev/null &
+for i in {1..23} ;do echo $i;sleep 0.85;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing Xorg..." 10 45
 wait
 for i in {23..25} ;do echo $i;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing Xorg..." 10 45
-arch-chroot /mnt bash -c 'pacman -S xfce4 xfce4-goodies' &
-for i in {25..73} ;do echo $i;sleep 0.5;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing xfce4..." 10 45
+arch-chroot /mnt bash -c 'pacman -S --noconfirm --asdeps xfce4 xfce4-goodies' > /dev/null &
+for i in {25..73} ;do echo $i;sleep 0.85;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing xfce4..." 10 45
 wait
 for i in {73..75} ;do echo $i;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing xfce4..." 10 45
-arch-chroot /mnt bash -c 'pacman -S lightdm lightdm-gtk-greeter && systemctl enable lightdm' &
-for i in {75..97} ;do echo $i;sleep 0.5;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing lightdm..." 10 45
+arch-chroot /mnt bash -c 'pacman -S --noconfirm --asdeps lightdm lightdm-gtk-greeter && systemctl enable lightdm' > /dev/null &
+for i in {75..97} ;do echo $i;sleep 0.85;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing lightdm..." 10 45
 wait
 for i in {97..100} ;do echo $i;done | dialog --title "Installing GUI..." --backtitle "Ensure Linux Installer" --gauge "Installing lightdm..." 10 45
 # 9. Finished
