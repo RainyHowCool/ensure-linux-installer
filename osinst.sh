@@ -61,8 +61,8 @@ netcheck
 dialog --title "Switch to USTC Mirror?" --backtitle "Ensure Linux Installer" --yesno "Switch to USTC Mirror can let China users get speeds." 6 35
 
 if [ "$?" == "0" ]; then
-    #   cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-    #   echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+    cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+    echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 fi
 
 dialog --title "Please wait..." --backtitle "Ensure Linux Installer" --infobox "Updating Mirror List..." 5 30
